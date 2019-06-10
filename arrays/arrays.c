@@ -77,9 +77,20 @@ void resize_array(Array *arr) {
  *****/
 char *arr_read(Array *arr, int index) {
 
-  // Throw an error if the index is greater or equal to than the current count
+  // Calculate number of elements in the array
+  //arr->count = sizeof(arr) / sizeof(arr[0]);
+  arr->count = strlen(arr);
 
-  // Otherwise, return the element at the given index
+  // Throw an error if the index is greater or equal to than the current count
+  if (index >= arr->count) {
+    fprintf(stderr, "Index invalid");
+  } else {
+    // Otherwise, return the element at the given index
+    //index * sizeof(char) + arr;
+    printf("%d", arr[index]);
+  }
+  return 0;
+
 }
 
 
@@ -110,9 +121,19 @@ void arr_append(Array *arr, char *element) {
   // Resize the array if the number of elements is over capacity
   // or throw an error if resize isn't implemented yet.
 
+  // If the capacity + the new element is greater than the count, then we need to resize to create space for the new element
+  if (arr->count < (arr->capacity + 1)) {
+    // Resize
+
+    // Throw an error
+    fprintf(stderr, "Not enough space");
+  }
+
   // Copy the element and add it to the end of the array
+  arr[arr->count + 1] = element;
 
   // Increment count by 1
+  arr->count++;
 
 }
 
@@ -155,13 +176,13 @@ int main(void)
 
   Array *arr = create_array(1);
 
-  arr_insert(arr, "STRING1", 0);
-  arr_append(arr, "STRING4");
-  arr_insert(arr, "STRING2", 0);
-  arr_insert(arr, "STRING3", 1);
-  arr_print(arr);
-  arr_remove(arr, "STRING3");
-  arr_print(arr);
+  // arr_insert(arr, "STRING1", 0);
+  // arr_append(arr, "STRING4");
+  // arr_insert(arr, "STRING2", 0);
+  // arr_insert(arr, "STRING3", 1);
+  // arr_print(arr);
+  // arr_remove(arr, "STRING3");
+  // arr_print(arr);
 
   destroy_array(arr);
 
