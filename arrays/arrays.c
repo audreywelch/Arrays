@@ -83,18 +83,16 @@ void resize_array(Array *arr) {
 char *arr_read(Array *arr, int index) {
 
   // Calculate number of elements in the array
-  //arr->count = sizeof(arr) / sizeof(arr[0]);
-  arr->count = strlen(arr);
+  // arr->count = strlen(arr);
 
   // Throw an error if the index is greater or equal to than the current count
   if (index >= arr->count) {
-    fprintf(stderr, "Invalid Index: index out of range");
+    fprintf(stderr, "Invalid Index: index out of range\n");
     return NULL;
-  } else {
-    // Otherwise, return the element at the given index
-    //index * sizeof(char) + arr;
-    printf("%d", arr->elements[index]);
-  }
+  } 
+
+  // Otherwise, return the element at the given index
+  //printf("%d", arr->elements[index]);
   return arr->elements[index];
 
 }
@@ -108,14 +106,27 @@ char *arr_read(Array *arr, int index) {
 void arr_insert(Array *arr, char *element, int index) {
 
   // Throw an error if the index is greater than the current count
+  if (index >= arr->count) {
+    fprintf(stderr, "Invalid Index: index out of range\n");
+    return NULL;
+  } 
 
   // Resize the array if the number of elements is over capacity
+  if (arr->capacity <= arr->count) {
+    resize_array(arr);
+  }
 
   // Move every element after the insert index to the right one position
+  for (int i = index - 1; i >= arr->count; i--) {
+    elements[i+1] = elements[i];
+  }
 
   // Copy the element (hint: use `strdup()`) and add it to the array
+  char *element_copy = strdup(element);
+  arr->elements[index] = element_copy;
 
   // Increment count by 1
+  arr->count++;
 
 }
 
@@ -126,14 +137,13 @@ void arr_append(Array *arr, char *element) {
 
   // Resize the array if the number of elements is over capacity
   // or throw an error if resize isn't implemented yet.
-
   if (arr->capacity <= arr->count) {
     
     // Resize
     resize_array(arr);
 
     // Throw an error
-    fprintf(stderr, "Not enough space");
+    fprintf(stderr, "Not enough space\n");
     return;
   }
 
@@ -188,11 +198,10 @@ int main(void)
   Array *arr = create_array(1);
 
   // arr_insert(arr, "STRING1", 0);
-  arr_append(arr, "STRING0");
   arr_append(arr, "STRING1");
-  arr_append(arr, "STRING2");
-  arr_read(arr, 0);
-  arr_read(arr, 1);
+  arr_append(arr, "STRIN21");
+  arr_print(arr);
+  printf("SECOND ELEMENT IS: %s\n", arr_read(arr, 1));
   //arr_insert(arr, "STRING2", 0);
   // arr_insert(arr, "STRING3", 1);
   // arr_print(arr);
