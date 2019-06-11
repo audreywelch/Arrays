@@ -108,7 +108,7 @@ void arr_insert(Array *arr, char *element, int index) {
   // Throw an error if the index is greater than the current count
   if (index >= arr->count) {
     fprintf(stderr, "Invalid Index: index out of range\n");
-    return NULL;
+    return;
   } 
 
   // Resize the array if the number of elements is over capacity
@@ -118,7 +118,7 @@ void arr_insert(Array *arr, char *element, int index) {
 
   // Move every element after the insert index to the right one position
   for (int i = index - 1; i >= arr->count; i--) {
-    elements[i+1] = elements[i];
+    arr->elements[i+1] = arr->elements[i];
   }
 
   // Copy the element (hint: use `strdup()`) and add it to the array
@@ -168,10 +168,17 @@ void arr_remove(Array *arr, char *element) {
 
   // Search for the first occurence of the element and remove it.
   // Don't forget to free its memory!
+  for (int i = 0; i < arr->count; i++) {
+    if (*(arr->elements[i]) == *element) {
+      //free(arr->elements[i]);
+      arr->elements[i] = arr->elements[i + 1]; 
+    }  
+  }
 
   // Shift over every element after the removed element to the left one position
 
   // Decrement count by 1
+  arr->count--;
 
 }
 
@@ -195,18 +202,18 @@ void arr_print(Array *arr) {
 int main(void)
 {
 
-  Array *arr = create_array(1);
+  Array *arr = create_array(8);
 
   // arr_insert(arr, "STRING1", 0);
   arr_append(arr, "STRING1");
-  arr_append(arr, "STRIN21");
+  arr_append(arr, "STRING2");
   arr_print(arr);
   printf("SECOND ELEMENT IS: %s\n", arr_read(arr, 1));
-  //arr_insert(arr, "STRING2", 0);
-  // arr_insert(arr, "STRING3", 1);
-  // arr_print(arr);
-  // arr_remove(arr, "STRING3");
-  // arr_print(arr);
+  arr_insert(arr, "STRING2", 0);
+  arr_insert(arr, "STRING3", 1);
+  arr_print(arr);
+  arr_remove(arr, "STRING3");
+  arr_print(arr);
 
   destroy_array(arr);
 
