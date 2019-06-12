@@ -57,6 +57,7 @@ void destroy_array(Array *arr) {
  * Create a new elements array with double capacity and copy elements
  * from old to new
  *****/
+// Passing a pointer allows us to modify the actual object
 void resize_array(Array *arr) {
 
   // Create a new element storage with double capacity
@@ -75,7 +76,7 @@ void resize_array(Array *arr) {
   free(arr->elements);
 
   // Update the elements and capacity to new values
-  arr->elements = new_elements;
+  arr->elements = new_elements; // update the garbage pointer to a new pointer
   arr->capacity = new_capacity;
 }
 
@@ -115,7 +116,7 @@ void arr_insert(Array *arr, char *element, int index) {
 
   // Throw an error if the index is greater than the current count
   if (index > arr->count) {
-    fprintf(stderr, "Invalid Index: index out of range\n");
+    fprintf(stderr, "Invalid Index: index %d out of range\n", index);
     return;
   } 
 
@@ -125,6 +126,7 @@ void arr_insert(Array *arr, char *element, int index) {
   }
 
   // Move every element after the insert index to the right one position
+  // Start at the end of the array, continue one step backwards until we hit the index
   for (int i = arr->count;i > index; i--) {
     // Element at each index is set to the previous value 
     arr->elements[i] = arr->elements[i-1];
@@ -179,17 +181,20 @@ void arr_append(Array *arr, char *element) {
 void arr_remove(Array *arr, char *element) {
 
   // Keeps track of whether or not we found the element ot be removed
-  int removed = 0;
+  int removed = 0; // Set to False
 
   // Search for the first occurence of the element and remove it.
   // Don't forget to free its memory!
   for (int i = 0; i < arr->count; i++) {
 
+    // If something was removed
     if (removed) {
       // Set previous element to the current one
+      // Shift over every element after the removed element to the left one position
       arr->elements[i-1] = arr->element[i];
     
     // if what is at our current element is equal to what we are looking for
+    // strcmp() compares 2 strings - returns 0 if strings are identical
     } else if (strcmp(arr->elements[i], elements) == 0) {
         // Free element
         free(arr->elements[i]);
@@ -197,7 +202,7 @@ void arr_remove(Array *arr, char *element) {
       }
     }
 
-    // Shift over every element after the removed element to the left one position
+    // If something was removed:
     if (removed) {
       // Decrement count by 1
       arr->count--;
