@@ -28,9 +28,9 @@ Array *create_array (int capacity) {
   arr->count = 0;
 
   // Allocate memory for elements
-  arr->elements = malloc(sizeof(char*) * capacity);
+  //arr->elements = malloc(sizeof(char*) * capacity);
   // pointer automatically initializes to Null
-  arr->elements = calloc(capacity, sizeof(char*) * capacity);
+  arr->elements = calloc(capacity, sizeof(char*));
 
   return arr;
 
@@ -61,30 +61,22 @@ void resize_array(Array *arr) {
 
   // Create a new element storage with double capacity
   int new_capacity = arr->capacity * 2
-  //Array *new_arr = malloc(sizeof(arr) * 2);
-  //new_arr->elements = malloc((sizeof(char*) * arr->capacity) * 2);
 
   // Create a new array with double capacity
-  char **new_elements = malloc(new_capacity * sizeof(char *));
-  char **new_elements = calloc(new_capacity * sizeof(char *));
+  //char **new_elements = malloc(new_capacity * sizeof(char *));
+  char **new_elements = calloc(new_capacity, sizeof(char *));
   
   // Copy elements into the new storage
   for (int i = 0; i < arr->count; i++) {
     new_elements[i] = arr->elements[i];
   }
-  //char *element_copy = strdup(arr->elements);
-  //new_arr->elements[new_arr->count] = element_copy;
 
   // Free the old elements array (but NOT the strings they point to)
   free(arr->elements);
-  //destroy_array(arr);
 
   // Update the elements and capacity to new values
   arr->elements = new_elements;
   arr->capacity = new_capacity;
-  //new_arr->elements = arr->elements;
-  //new_arr->capacity = new_arr->capacity;
-
 }
 
 
@@ -102,9 +94,6 @@ void resize_array(Array *arr) {
  *****/
 char *arr_read(Array *arr, int index) {
 
-  // Calculate number of elements in the array
-  // arr->count = strlen(arr);
-
   // Throw an error if the index is greater or equal to than the current count
   if (index >= arr->count) {
     fprintf(stderr, "Invalid Index: index out of range\n");
@@ -112,7 +101,6 @@ char *arr_read(Array *arr, int index) {
   } 
 
   // Otherwise, return the element at the given index
-  //printf("%d", arr->elements[index]);
   return arr->elements[index];
 
 }
@@ -177,6 +165,9 @@ void arr_append(Array *arr, char *element) {
 
   // Increment count by 1
   arr->count++;
+
+  // This can be done in one line by calling the arr_insert() function
+  //arr_insert(arr, element, arr->count);
 }
 
 /*****
@@ -187,7 +178,7 @@ void arr_append(Array *arr, char *element) {
  *****/
 void arr_remove(Array *arr, char *element) {
 
-  // Keeps track of whether or not we found
+  // Keeps track of whether or not we found the element ot be removed
   int removed = 0;
 
   // Search for the first occurence of the element and remove it.
@@ -215,11 +206,6 @@ void arr_remove(Array *arr, char *element) {
     } else {
       fprintf(stderr, "ValueError: %s not in array", elements);
     }
-
-    // if (*(arr->elements[i]) == *element) {
-    //   //free(arr->elements[i]);
-    //   arr->elements[i] = arr->elements[i + 1]; 
-    // }  
   }
 }
 
@@ -245,7 +231,7 @@ int main(void)
 
   Array *arr = create_array(8);
 
-  // arr_insert(arr, "STRING1", 0);
+  arr_insert(arr, "STRING0", 0);
   arr_append(arr, "STRING1");
   arr_append(arr, "STRING2");
   arr_print(arr);
